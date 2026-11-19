@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Shashwat Madhav</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#06060f;
+  --bg2:#0b0b1c;
+  --surface:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.07);
+  --accent:#4a6fa5;
+  --accent2:#7ba3d4;
+  --glow:rgba(74,111,165,0.14);
+  --white:#fff;
+  --muted:#7070a0;
+  --faint:#4a4a6a;
+}
+
+html,body{min-height:100%;background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden}
+
+/* ── CANVAS BACKGROUND ── */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── LAYOUT ── */
+main{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 28px 80px}
+
+/* ── HERO ── */
+.hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;
+  justify-content:center;
+  padding-top:60px;
+}
+
+.hero-sup{
+  font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--accent2);margin-bottom:20px;
+  opacity:0;animation:up .6s .1s ease forwards;
+}
+
+.hero-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,10vw,96px);
+  font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  line-height:.95;
+  opacity:0;animation:up .6s .25s ease forwards;
+}
+.hero-name em{color:var(--accent2);font-style:normal}
+
+.hero-desc{
+  margin-top:24px;max-width:520px;
+  font-size:15px;line-height:1.8;color:rgba(255,255,255,.6);
+  opacity:0;animation:up .6s .4s ease forwards;
+}
+
+.hero-chips{
+  display:flex;flex-wrap:wrap;gap:9px;margin-top:28px;
+  opacity:0;animation:up .6s .55s ease forwards;
+}
+.chip{
+  font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--accent2);border:1px solid rgba(74,111,165,.35);
+  background:rgba(74,111,165,.08);padding:5px 13px;border-radius:2px;
+}
+
+.scroll-cue{
+  margin-top:52px;display:flex;align-items:center;gap:12px;
+  opacity:0;animation:fadeIn .8s 1s ease forwards;
+  cursor:pointer;
+}
+.scroll-cue span{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted)}
+.scroll-line{width:44px;height:1px;background:linear-gradient(to right,var(--accent2),transparent)}
+
+/* ── SECTION ── */
+.sec{padding:80px 0 0}
+.sec-head{
+  display:flex;align-items:center;gap:16px;margin-bottom:48px;
+}
+.sec-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent2);letter-spacing:2px}
+.sec-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(26px,4vw,34px);font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+}
+.sec-rule{flex:1;height:1px;background:var(--border)}
+
+/* ── DRIVES ── */
+.drives-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+
+.drive-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;padding:26px 22px;
+  cursor:default;transition:border-color .25s,transform .2s,background .25s;
+  position:relative;overflow:hidden;
+}
+.drive-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--accent);transform:scaleX(0);transform-origin:left;
+  transition:transform .3s;
+}
+.drive-card:hover{border-color:rgba(74,111,165,.4);background:var(--glow);transform:translateY(-3px)}
+.drive-card:hover::before{transform:scaleX(1)}
+
+.drive-icon{font-size:26px;margin-bottom:14px;display:block}
+.drive-label{font-size:13px;font-weight:600;letter-spacing:.5px;color:var(--white);margin-bottom:8px}
+.drive-text{font-size:12.5px;color:var(--muted);line-height:1.65}
+
+/* ── BUILT ── */
+.built-list{display:flex;flex-direction:column;gap:14px}
+
+.built-item{
+  display:grid;grid-template-columns:48px 1fr;gap:18px;
+  align-items:start;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;padding:20px 22px;
+  transition:border-color .2s,background .2s;cursor:default;
+}
+.built-item:hover{border-color:rgba(74,111,165,.4);background:var(--glow)}
+
+.built-icon{font-size:22px;padding-top:2px}
+.built-name{font-size:13.5px;font-weight:600;color:var(--white);margin-bottom:5px}
+.built-desc{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+.built-tags{display:flex;flex-wrap:wrap;gap:6px}
+.built-tag{
+  font-family:'DM Mono',monospace;font-size:9.5px;
+  letter-spacing:1px;text-transform:uppercase;
+  color:var(--accent2);border:1px solid rgba(74,111,165,.3);
+  background:rgba(74,111,165,.07);padding:3px 8px;border-radius:2px;
+}
+
+/* ── INTERESTS ── */
+.interests-wrap{position:relative}
+
+.interest-tabs{
+  display:flex;gap:0;border-bottom:1px solid var(--border);
+  margin-bottom:36px;overflow-x:auto;
+}
+.interest-tab{
+  font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--muted);padding:11px 20px;cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;
+  transition:color .2s,border-color .2s;
+}
+.interest-tab:hover{color:var(--white)}
+.interest-tab.on{color:var(--accent2);border-bottom-color:var(--accent2)}
+
+.interest-panel{display:none;animation:fadeIn .35s ease}
+.interest-panel.on{display:block}
+
+.interest-body{
+  display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;
+}
+.interest-text{font-size:14px;color:rgba(255,255,255,.65);line-height:1.85}
+.interest-text p{margin-bottom:16px}
+.interest-text p:last-child{margin-bottom:0}
+
+.interest-facts{display:flex;flex-direction:column;gap:12px}
+.fact{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;padding:14px 16px;
+}
+.fact-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent2);margin-bottom:4px}
+.fact-val{font-size:13px;color:rgba(255,255,255,.8);line-height:1.5}
+
+/* ── TIMELINE STRIP ── */
+.timeline-strip{
+  position:relative;padding-left:22px;margin-top:0;
+}
+.timeline-strip::before{
+  content:'';position:absolute;left:0;top:8px;bottom:8px;
+  width:1px;background:rgba(74,111,165,.3);
+}
+.ts-item{position:relative;margin-bottom:22px}
+.ts-item:last-child{margin-bottom:0}
+.ts-dot{
+  position:absolute;left:-27px;top:5px;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--accent2);border:2px solid var(--bg);
+  box-shadow:0 0 0 1px var(--accent2);
+}
+.ts-dot.now{background:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.5)}
+.ts-role{font-size:12.5px;font-weight:600;color:var(--white);margin-bottom:2px}
+.ts-org{font-size:12px;color:var(--accent2);font-style:italic;margin-bottom:1px}
+.ts-date{font-family:'DM Mono',monospace;font-size:10.5px;color:var(--muted)}
+
+/* ── NOW BANNER ── */
+.now-banner{
+  margin-top:64px;
+  border:1px solid rgba(74,111,165,.35);
+  border-radius:6px;padding:28px 30px;
+  background:rgba(74,111,165,.06);
+  display:flex;align-items:center;gap:20px;
+}
+.now-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:#5af078;box-shadow:0 0 10px #5af078;
+  flex-shrink:0;animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 8px #5af078}50%{opacity:.5;box-shadow:0 0 20px #5af078}}
+.now-text{font-size:13.5px;color:rgba(255,255,255,.7);line-height:1.7}
+.now-text strong{color:var(--white)}
+
+/* ── FOOTER ── */
+.footer{
+  margin-top:80px;padding-top:28px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;letter-spacing:2px;color:var(--muted)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--accent2)}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.rv.vis{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
+
+/* ── KEYFRAMES ── */
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<main>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <p class="hero-sup">ECE + Physics Minor · PES University · Bengaluru · 2nd Year</p>
+  <h1 class="hero-name">Shashwat<br><em>Madhav</em></h1>
+  <p class="hero-desc">I work where quantum mechanics meets computation — simulating physical phenomena with circuits, building intelligent systems with data, and shipping things that didn't exist before.</p>
+  <div class="hero-chips">
+    <span class="chip">Quantum Computing</span>
+    <span class="chip">Machine Learning</span>
+    <span class="chip">Computational Physics</span>
+    <span class="chip">Physics Minor</span>
+    <span class="chip">Autonomous Systems</span>
+    <span class="chip">Cybersecurity</span>
+  </div>
+  <div class="scroll-cue" onclick="document.querySelector('#drives').scrollIntoView({behavior:'smooth'})">
+    <span>Explore</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ── WHAT DRIVES ME ── -->
+<section class="sec" id="drives">
+  <div class="sec-head rv">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">What drives me</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="drives-grid">
+    <div class="drive-card rv">
+      <span class="drive-icon">⚛️</span>
+      <div class="drive-label">The quantum frontier</div>
+      <p class="drive-text">Quantum computing sits at the edge of what's physically computable. The idea that a qubit can hold superposition — be two things at once — and that entanglement can link particles across space: that's not abstraction, it's reality we can engineer. I want to be someone who does that engineering.</p>
+    </div>
+    <div class="drive-card rv d1">
+      <span class="drive-icon">🔬</span>
+      <div class="drive-label">Physics as code</div>
+      <p class="drive-text">The Jaynes-Cummings model, photon-matter interactions, energy exchange in quantum circuits — these aren't just equations. They're programs waiting to be written. Computational physics is where I translate the language of the universe into something a machine can simulate. My Physics minor gives me the formal foundation — Lagrangian mechanics, statistical physics — to do it properly.</p>
+    </div>
+    <div class="drive-card rv d2">
+      <span class="drive-icon">🧠</span>
+      <div class="drive-label">Intelligence from data</div>
+      <p class="drive-text">ML and deep learning let me find structure where there seems to be none — predicting churn, pricing houses, understanding sentiment in text. I'm drawn to the moment a model suddenly generalises: when the pattern becomes the prediction.</p>
+    </div>
+    <div class="drive-card rv d3">
+      <span class="drive-icon">⚡</span>
+      <div class="drive-label">Building real systems</div>
+      <p class="drive-text">Working on Vega Racing Electric's EV systems taught me that hardware is unforgiving. Battery management, motor controllers, precision assembly — real-world engineering doesn't compile; it either works or it doesn't. That pressure sharpens everything.</p>
+    </div>
+    <div class="drive-card rv d1">
+      <span class="drive-icon">🎹</span>
+      <div class="drive-label">Structure in everything</div>
+      <p class="drive-text">Piano gave me an obsession with structure. A chord progression is a decision tree. A Beethoven sonata is an algorithm with emotion as the loss function. I bring that same attention to architecture — in code, in circuits, in ideas.</p>
+    </div>
+    <div class="drive-card rv d2">
+      <span class="drive-icon">🌐</span>
+      <div class="drive-label">Open collaboration</div>
+      <p class="drive-text">At PES Open Source I learned that the best solutions come from building in public, with others. Open-source isn't just a licence — it's a philosophy: share the work, share the knowledge, let the best ideas win.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT I'VE BUILT ── -->
+<section class="sec" id="built">
+  <div class="sec-head rv">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">What I've built</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="built-list">
+    <div class="built-item rv">
+      <div class="built-icon">🔭</div>
+      <div>
+        <div class="built-name">Jaynes-Cummings Model Simulation</div>
+        <div class="built-desc">Simulated the quantum optical interaction of a photon with two electron (matter) particles in terms of energy exchange — implemented as a quantum circuit using IBM Quantum Composer and Qiskit. A direct translation of a foundational quantum optics model into executable gates.</div>
+        <div class="built-tags"><span class="built-tag">Qiskit</span><span class="built-tag">IBM Quantum</span><span class="built-tag">Quantum Gates</span><span class="built-tag">Qubit Manipulation</span><span class="built-tag">Python</span></div>
+      </div>
+    </div>
+    <div class="built-item rv d1">
+      <div class="built-icon">📉</div>
+      <div>
+        <div class="built-name">Customer Churn Prediction</div>
+        <div class="built-desc">End-to-end ML pipeline: data ingestion, feature engineering, Scikit-Learn classification, ROC-AUC evaluation, confusion matrix analysis, and Matplotlib/Pandas visualisation. Built to identify at-risk customers before they leave.</div>
+        <div class="built-tags"><span class="built-tag">Scikit-Learn</span><span class="built-tag">Pandas</span><span class="built-tag">Matplotlib</span><span class="built-tag">ROC-AUC</span><span class="built-tag">Data Classification</span></div>
+      </div>
+    </div>
+    <div class="built-item rv d2">
+      <div class="built-icon">🏡</div>
+      <div>
+        <div class="built-name">House Price Prediction</div>
+        <div class="built-desc">Regression model for real estate valuation — incorporating feature selection, outlier handling, and visualisation to surface which variables actually drive price. Focused on interpretability as much as accuracy.</div>
+        <div class="built-tags"><span class="built-tag">Python</span><span class="built-tag">Machine Learning</span><span class="built-tag">Regression</span><span class="built-tag">Data Visualisation</span></div>
+      </div>
+    </div>
+    <div class="built-item rv">
+      <div class="built-icon">💬</div>
+      <div>
+        <div class="built-name">Sentiment Analysis with NLP</div>
+        <div class="built-desc">Natural language processing pipeline for classifying sentiment from text — tokenisation, vectorisation, and deep learning classification. Applied IBM Watson concepts and explored how machines learn the polarity of human language.</div>
+        <div class="built-tags"><span class="built-tag">NLP</span><span class="built-tag">Deep Learning</span><span class="built-tag">IBM Watson</span><span class="built-tag">Python</span><span class="built-tag">Neural Networks</span></div>
+      </div>
+    </div>
+    <div class="built-item rv d1">
+      <div class="built-icon">🚗</div>
+      <div>
+        <div class="built-name">EV Electrical Systems — Vega Racing Electric</div>
+        <div class="built-desc">As Electrical System Trainee (full-time, on-site) and Electrical Engineering Intern, contributed to the electrical subsystems of PESU's racing EV prototype — battery management systems, motor controllers, and systems integration.</div>
+        <div class="built-tags"><span class="built-tag">Battery Management</span><span class="built-tag">Motor Controllers</span><span class="built-tag">Electrical Engineering</span><span class="built-tag">Automotive Design</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT INTERESTS ME ── -->
+<section class="sec" id="interests">
+  <div class="sec-head rv">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">What interests me</h2>
+    <div class="sec-rule"></div>
+  </div>
+
+  <div class="interest-tabs rv">
+    <button class="interest-tab on" data-tab="quantum">Quantum & Physics</button>
+    <button class="interest-tab" data-tab="minor">Physics Minor</button>
+    <button class="interest-tab" data-tab="ai">AI & Data</button>
+    <button class="interest-tab" data-tab="security">Cybersecurity</button>
+    <button class="interest-tab" data-tab="ev">EV & Systems</button>
+    <button class="interest-tab" data-tab="product">Product & Ideas</button>
+    <button class="interest-tab" data-tab="music">Music</button>
+  </div>
+
+  <!-- Quantum -->
+  <div class="interest-panel on" id="tab-quantum">
+    <div class="interest-body">
+      <div class="interest-text">
+        <p>Quantum computing is not just a faster computer — it's a fundamentally different model of computation. I'm fascinated by how superposition and entanglement can be harnessed to solve problems that classical machines can't touch.</p>
+        <p>My hands-on work with the Jaynes-Cummings model showed me that quantum optics and quantum computing are deeply linked — the same gates that manipulate qubits also describe light-matter interactions in cavities.</p>
+        <p>Longer-term: I want to work on quantum algorithms for simulation, specifically in chemistry and materials science — areas where quantum advantage is most tangible.</p>
+      </div>
+      <div class="interest-facts">
+        <div class="fact"><div class="fact-label">Tools I use</div><div class="fact-val">Qiskit · IBM Quantum Composer · IBM Quantum Enigmas</div></div>
+        <div class="fact"><div class="fact-label">Concepts</div><div class="fact-val">Superposition · Entanglement · Quantum Gates · Qubit Manipulation · Logic Gates</div></div>
+        <div class="fact"><div class="fact-label">Currently studying</div><div class="fact-val">Physics Minor (Classical &amp; Statistical Physics) · Introduction to Quantum Computing (PESU I/O) · Computational Physics &amp; Quantum Simulation internship at PES OS</div></div>
+        <div class="fact"><div class="fact-label">Recognition</div><div class="fact-val">Semi-finalist, Global Quantum Mechanics Challenge (GQMC)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Physics Minor -->
+  <div class="interest-panel" id="tab-minor">
+    <div class="interest-body">
+      <div class="interest-text">
+        <p>Alongside my B.Tech in Electronics &amp; Communications, I'm pursuing a minor in Physics at PES University. It's the formal backbone behind everything I simulate — the maths and mechanics underneath the circuits I build.</p>
+        <p>Current course: <strong>UE26PH251 — Classical and Statistical Physics</strong>. It runs from classical mechanics (constraints, D'Alembert's principle, Euler-Lagrange equations, Noether's theorem, central forces, Rutherford scattering) through tensors, into statistical mechanics, partition functions, ensembles, and quantum statistics.</p>
+        <p>This is exactly the toolkit that connects to quantum simulation: ensembles and partition functions are how you move from single particles to systems, and Lagrangian thinking is how you set up a problem before you ever write code.</p>
+      </div>
+      <div class="interest-facts">
+        <div class="fact"><div class="fact-label">Course</div><div class="fact-val">UE26PH251 — Classical and Statistical Physics</div></div>
+        <div class="fact"><div class="fact-label">Unit I</div><div class="fact-val">Classical Mechanics — Lagrangian formalism, Noether's theorem, central forces</div></div>
+        <div class="fact"><div class="fact-label">Unit II</div><div class="fact-val">Tensors</div></div>
+        <div class="fact"><div class="fact-label">Units III &amp; IV</div><div class="fact-val">Statistical Mechanics &amp; Partition Function · Ensembles, Quantum Statistics &amp; Thermodynamics</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI -->
+  <div class="interest-panel" id="tab-ai">
+    <div class="interest-body">
+      <div class="interest-text">
+        <p>Machine learning is the closest thing we have to teaching machines intuition. I'm interested in the full stack — from raw data cleaning and feature engineering to model training, evaluation, and interpretation.</p>
+        <p>I've worked across supervised learning (churn prediction, price regression), NLP (sentiment analysis), and deep learning. What draws me most is the moment a model generalises — when patterns in training become predictions on unseen data.</p>
+        <p>Computer vision, chatbots, and artificial neural networks are areas I'm actively exploring through IBM AI Fundamentals and project work at PES University.</p>
+      </div>
+      <div class="interest-facts">
+        <div class="fact"><div class="fact-label">Libraries</div><div class="fact-val">Scikit-Learn · Pandas · Matplotlib · IBM Watson</div></div>
+        <div class="fact"><div class="fact-label">Techniques</div><div class="fact-val">Classification · Regression · NLP · ROC-AUC · Confusion Matrix · Deep Learning</div></div>
+        <div class="fact"><div class="fact-label">Projects</div><div class="fact-val">Customer Churn Prediction · House Price Prediction · Sentiment Analysis</div></div>
+        <div class="fact"><div class="fact-label">Cert</div><div class="fact-val">IBM SkillsBuild — Artificial Intelligence Fundamentals</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="interest-panel" id="tab-security">
+    <div class="interest-body">
+      <div class="interest-text">
+        <p>Cybersecurity interests me as a discipline of adversarial thinking. You don't just build a system — you have to imagine every way it could fail or be attacked, and design against that.</p>
+        <p>Vulnerability management, CTI, incident response, and information security are areas I've formally studied. I see security as foundational infrastructure for any system that handles real data — especially as quantum computing begins to threaten classical cryptography.</p>
+      </div>
+      <div class="interest-facts">
+        <div class="fact"><div class="fact-label">Areas</div><div class="fact-val">Vulnerability Management · Incident Response · Cyber Threat Intelligence · Cyber Risk Management · Information Security</div></div>
+        <div class="fact"><div class="fact-label">Cert</div><div class="fact-val">IBM SkillsBuild — Cybersecurity Fundamentals</div></div>
+        <div class="fact"><div class="fact-label">Interest</div><div class="fact-val">Post-quantum cryptography — how quantum algorithms break RSA, and what replaces it</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EV -->
+  <div class="interest-panel" id="tab-ev">
+    <div class="interest-body">
+      <div class="interest-text">
+        <p>Working on Vega Racing Electric's EV prototype gave me a visceral appreciation for hardware. Software has a REPL — hardware has consequences. If a battery management system fails, the car stops. That constraint forces rigour.</p>
+        <p>I'm interested in the intersection of autonomous systems, electrical engineering, and sensing — specifically how software-defined intelligence gets embedded into physical vehicles.</p>
+      </div>
+      <div class="interest-facts">
+        <div class="fact"><div class="fact-label">Roles held</div><div class="fact-val">Electrical System Trainee (Nov 2025–Present) · Electrical Engineering Intern (Jun–Jul 2026)</div></div>
+        <div class="fact"><div class="fact-label">Domains</div><div class="fact-val">Battery Management Systems · Motor Controllers · Autonomous Vehicles · Automotive Design</div></div>
+        <div class="fact"><div class="fact-label">Environment</div><div class="fact-val">Full-time on-site (trainee) · Hybrid (intern) · Bengaluru</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product -->
+  <div class="interest-panel" id="tab-product">
+    <div class="interest-body">
+      <div class="interest-text">
+        <p>The IISc Product Solutions Architect certification crystallised something for me: building things is only half the job. The other half is understanding who you're building for, what problem they actually have, and how to structure a solution they'll adopt.</p>
+        <p>Product development, structured interviews, project management — these are the skills that turn a prototype into something real. I'm interested in how technical depth and product thinking combine.</p>
+      </div>
+      <div class="interest-facts">
+        <div class="fact"><div class="fact-label">Cert</div><div class="fact-val">IISc — Certified Product Solutions Architect (Aug 2026)</div></div>
+        <div class="fact"><div class="fact-label">Skills</div><div class="fact-val">Product Development · Product Design · Project Management · Structured Interviews · Team Management</div></div>
+        <div class="fact"><div class="fact-label">Context</div><div class="fact-val">Technical Core Member at PES OS — shipping open-source projects collaboratively</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music -->
+  <div class="interest-panel" id="tab-music">
+    <div class="interest-body">
+      <div class="interest-text">
+        <p>Piano is the oldest discipline I have. I've been playing long enough that music isn't separate from how I think — it's the same pattern recognition, the same structural intuition, applied to sound.</p>
+        <p>A chord progression is a decision tree. A sonata is a state machine with emotion as output. The precision required to perform well in an ensemble — timing, listening, adapting in real time — maps almost exactly onto what good collaborative engineering looks like.</p>
+      </div>
+      <div class="interest-facts">
+        <div class="fact"><div class="fact-label">Role</div><div class="fact-val">Pianist, Music Club of PESU · Dec 2025–Present</div></div>
+        <div class="fact"><div class="fact-label">What I do</div><div class="fact-val">Ensemble performances · Rehearsal coordination · Collaborative arrangement</div></div>
+        <div class="fact"><div class="fact-label">The connection</div><div class="fact-val">Structure, timing, and listening — the same skills that make a good engineer make a good musician</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── NOW ── -->
+<div class="now-banner rv" style="margin-top:72px">
+  <div class="now-dot"></div>
+  <div class="now-text">
+    <strong>Right now</strong> — Electrical System Trainee at Vega Racing Electric (full-time, on-site), Computational Physics & Quantum Simulation intern at PES OS (remote, Jun–Sep 2026), Technical Core Member at PES OS, and QML Trainee at PES Qforest. Currently in 2nd year of a B.Tech in ECE at PES University (expected 2029), with a minor in Physics.
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer rv">
+  <div class="footer-name">Shashwat Madhav</div>
+  <div class="footer-links">
+    <a href="mailto:shashwat.wkb@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/shashwat-madhav-7ba64b240/" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+
+</main>
+
+<script>
+/* ── STARFIELD ── */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [], W, H;
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+function initStars(){
+  stars=[];
+  for(let i=0;i<200;i++) stars.push({
+    x:Math.random()*W, y:Math.random()*H,
+    r:Math.random()*1.1+.2,
+    a:Math.random()*.8+.1,
+    sp:Math.random()*.4+.05,
+    ph:Math.random()*Math.PI*2
+  });
+}
+function drawStars(t){
+  ctx.clearRect(0,0,W,H);
+  stars.forEach(s=>{
+    const fl=s.a*(0.5+.5*Math.sin(t*s.sp+s.ph));
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(170,190,255,${fl})`;ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+resize();initStars();requestAnimationFrame(drawStars);
+window.addEventListener('resize',()=>{resize();initStars()});
+
+/* ── REVEAL ON SCROLL ── */
+const rvObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')});
+},{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
+
+/* ── INTEREST TABS ── */
+document.querySelectorAll('.interest-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.interest-tab').forEach(t=>t.classList.remove('on'));
+    document.querySelectorAll('.interest-panel').forEach(p=>p.classList.remove('on'));
+    tab.classList.add('on');
+    document.getElementById('tab-'+tab.dataset.tab).classList.add('on');
+  });
+});
+
+/* ── CURSOR GLOW ── */
+const glow = Object.assign(document.createElement('div'),{
+  style:'position:fixed;width:240px;height:240px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(74,111,165,0.07) 0%,transparent 70%);transform:translate(-50%,-50%);transition:left .05s,top .05s'
+});
+document.body.appendChild(glow);
+window.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'});
+</script>
+</body>
+</html>
